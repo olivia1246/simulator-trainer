@@ -48,10 +48,11 @@
 }
 
 - (NSDictionary *)bootstrapFilesToCopy {
-    NSDictionary *bundleFiles = @{
+    NSDictionary *resourceFileMap = @{
         @"FLEX.dylib": @"/Library/MobileSubstrate/DynamicLibraries/FLEX.dylib",
         @"FLEX.plist": @"/Library/MobileSubstrate/DynamicLibraries/FLEX.plist",
         @"CydiaSubstrate": @"/Library/Frameworks/CydiaSubstrate.framework/CydiaSubstrate",
+        @"libsubstrate.dylib": @"/usr/lib/libsubstrate.dylib",
         @"libhooker.dylib": @"/usr/lib/libhooker.dylib",
         @"loader.dylib": @"/usr/lib/loader.dylib",
         @"cycript_server.dylib": @"/Library/MobileSubstrate/DynamicLibraries/cycript_server.dylib",
@@ -62,13 +63,15 @@
     
     NSMutableDictionary *filesToCopy = [[NSMutableDictionary alloc] init];
     NSString *simRuntimePath = self.runtimeRoot;
-    for (NSString *bundleFile in bundleFiles) {
-        NSString *fullSourcePath = [[NSBundle mainBundle] pathForResource:bundleFile ofType:nil];
-        if (!fullSourcePath) {
+    for (NSString *resourceFileName in resourceFileMap) {
+        
+        NSString *sourcePath = [[NSBundle mainBundle] pathForResource:resourceFileName ofType:nil];
+        if (!sourcePath) {
             continue;
         }
         
-        filesToCopy[fullSourcePath] = [simRuntimePath stringByAppendingPathComponent:bundleFiles[bundleFile]];
+        NSString *destinationPath = resourceFileMap[resourceFileName];
+        filesToCopy[sourcePath] = [simRuntimePath stringByAppendingPathComponent:destinationPath];
     }
     
     return [filesToCopy copy];
