@@ -241,11 +241,7 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:@"InstallTweakNotification" object:realPath];
             return YES;
         }
-        else if ([[realPath pathExtension] isEqualToString:@"ipa"]) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"InstallIpaNotification" object:realPath];
-            return YES;
-        }
-        else if ([[realPath pathExtension] isEqualToString:@"app"]) {
+        else if ([[realPath pathExtension] isEqualToString:@"app"] || [[realPath pathExtension] isEqualToString:@"ipa"]) {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"InstallAppNotification" object:realPath];
             return YES;
         }

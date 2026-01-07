@@ -99,7 +99,7 @@
             return;
         }
         
-        [self installAppBundleAtURL:[NSURL fileURLWithPath:filePath]];
+        [self installAppAtURL:[NSURL fileURLWithPath:filePath]];
     }];
     
     void (^deviceListFullRefreshBlock)(void) = ^(void) {
@@ -297,15 +297,14 @@
 
 - (void)_updateSelectedDeviceUI {
     ON_MAIN_THREAD(^{
-        // Update the device buttons and labels based on the selected device
-        if (!self->selectedDevice) {
-            // No device selected -- disable buttons
-            [self _disableDeviceButtons];
-            return;
-        }
-        
         // Start with everything disabled
         [self _disableDeviceButtons];
+        
+        // Update the device buttons and labels based on the selected device
+        if (!self->selectedDevice) {
+            // No device selected -- keep everything disabled
+            return;
+        }
         
         self.statusImageView.image = [NSImage imageNamed:NSImageNameStatusUnavailable];
         self.tweakStatus.stringValue = @"No active device";
@@ -632,7 +631,7 @@
 }
 
 #pragma mark - App Installation
-- (void)installAppBundleAtURL:(NSURL *)bundleUrl {
+- (void)installAppAtURL:(NSURL *)bundleUrl {
     if (!selectedDevice || !selectedDevice.isBooted) {
         [self setNegativeStatus:@"Select a device first"];
         return;
@@ -641,7 +640,8 @@
     [self setStatus:[NSString stringWithFormat:@"Installing %@...", bundleUrl.lastPathComponent]];
 
     BootedSimulatorWrapper *bootedSim = [BootedSimulatorWrapper fromSimulatorWrapper:selectedDevice];
-    [self.packageService installAppBundleAtPath:bundleUrl.path toDevice:bootedSim completion:^(NSError * _Nullable error) {
+    
+    void (^installationCompletion)(NSError * _Nullable) = ^(NSError * _Nullable error) {
         if (error) {
             NSLog(@"Failed to install app: %@", error);
             [self setNegativeStatus:[NSString stringWithFormat:@"Install failed: %@", error.localizedDescription]];
@@ -663,7 +663,15 @@
             
             [self setPositiveStatus:@"Installed"];
         }
-    }];
+    };
+    
+    if ([bundleUrl.pathExtension isEqualToString:@"ipa"]) {
+        [self.packageService installIpaAtPath:bundleUrl.path toDevice:bootedSim completion:installationCompletion];
+        return;
+    }
+    else if ([bundleUrl.pathExtension isEqualToString:@"app"]) {
+        [self.packageService installAppBundleAtPath:bundleUrl.path toDevice:bootedSim completion:installationCompletion];
+    }
 }
 
 @end

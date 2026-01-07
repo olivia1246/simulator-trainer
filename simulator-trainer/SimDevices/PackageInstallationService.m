@@ -267,6 +267,54 @@
     }
 }
 
+- (void)installIpaAtPath:(NSString *)ipaPath toDevice:(BootedSimulatorWrapper *)device completion:(void (^)(NSError * _Nullable error))completion {
+    NSError *unzipError = nil;
+    NSString *tempUnzipDir = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
+    if (![[NSFileManager defaultManager] createDirectoryAtPath:tempUnzipDir withIntermediateDirectories:YES attributes:nil error:&unzipError]) {
+        if (completion) {
+            completion(unzipError);
+        }
+        
+        return;
+    }
+    
+    if (![CommandRunner runCommand:@"/usr/bin/unzip" withArguments:@[@"-q", ipaPath, @"-d", tempUnzipDir] stdoutString:nil error:&unzipError]) {
+        [[NSFileManager defaultManager] removeItemAtPath:tempUnzipDir error:nil];
+        if (completion) {
+            completion(unzipError);
+        }
+        
+        return;
+    }
+    
+    NSString *payloadDir = [tempUnzipDir stringByAppendingPathComponent:@"Payload"];
+    NSDirectoryEnumerator *dirEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:payloadDir];
+    NSString *appRelativePath;
+    NSString *appBundlePath = nil;
+    while ((appRelativePath = [dirEnumerator nextObject])) {
+        if ([appRelativePath.pathExtension isEqualToString:@"app"]) {
+            appBundlePath = [payloadDir stringByAppendingPathComponent:appRelativePath];
+            break;
+        }
+    }
+    
+    if (!appBundlePath) {
+        [[NSFileManager defaultManager] removeItemAtPath:tempUnzipDir error:nil];
+        if (completion) {
+            completion([NSError errorWithDomain:NSCocoaErrorDomain code:103 userInfo:@{NSLocalizedDescriptionKey: @"No .app bundle found in the .ipa file"}]);
+        }
+        
+        return;
+    }
+    
+    [self installAppBundleAtPath:appBundlePath toDevice:device completion:^(NSError * _Nullable error) {
+        [[NSFileManager defaultManager] removeItemAtPath:tempUnzipDir error:nil];
+        if (completion) {
+            completion(error);
+        }
+    }];
+}
+
 - (void)installAppBundleAtPath:(NSString *)appPath toDevice:(BootedSimulatorWrapper *)device completion:(void (^)(NSError * _Nullable error))completion {
     NSString *appFileNameWithoutExtension = [[appPath lastPathComponent] stringByDeletingPathExtension];
     NSString *randomizedName = [NSString stringWithFormat:@"%@-%@.%@", appFileNameWithoutExtension, [[NSUUID UUID] UUIDString], [appPath pathExtension]];
