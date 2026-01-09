@@ -296,7 +296,7 @@ static BOOL _overlayRootIsUnsafe(NSString *absDir, NSArray<NSString *> *mountPoi
         if ([AppBinaryPatcher isMachOFile:destinationPath] && ![AppBinaryPatcher isBinaryArm64SimulatorCompatible:destinationPath]) {
             // Convert to simulator platform and then codesign
             [AppBinaryPatcher thinBinaryAtPath:destinationPath];
-            convertPlatformToSimulator(destinationPath.UTF8String);
+            convert_to_simulator_platform(destinationPath.UTF8String);
             
             [AppBinaryPatcher codesignItemAtPath:destinationPath completion:^(BOOL success, NSError *error) {
                 if (!success) {
@@ -377,7 +377,7 @@ static BOOL _overlayRootIsUnsafe(NSString *absDir, NSArray<NSString *> *mountPoi
         return;
     }
     
-    convertPlatformToSimulator(tmpAppPath.UTF8String);
+    convert_to_simulator_platform(tmpAppPath.UTF8String);
     
     // Sign every executable in the app bundle
     NSDirectoryEnumerator *dirEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:tmpAppPath];

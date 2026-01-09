@@ -1,0 +1,3 @@
+[submodule "external/machoe"]
+	path = external/machoe
+	url = https://github.com/EthanArbuckle/machoe

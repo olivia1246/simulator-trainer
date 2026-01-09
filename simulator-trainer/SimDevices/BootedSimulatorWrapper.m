@@ -41,9 +41,12 @@
 
 - (NSArray <NSString *> *)directoriesToOverlay {
     return @[
+//        [self.runtimeRoot stringByAppendingPathComponent:@"/usr/bin"],
+//        [self.runtimeRoot stringByAppendingPathComponent:@"/usr/libexec"],
         [self.runtimeRoot stringByAppendingPathComponent:@"/usr/lib"],
         [self.runtimeRoot stringByAppendingPathComponent:@"/Library"],
-        [self.runtimeRoot stringByAppendingPathComponent:@"/private/var"],
+//        [self.runtimeRoot stringByAppendingPathComponent:@"/private/var"],
+//        [self.runtimeRoot stringByAppendingPathComponent:@"/private/etc"],
     ];
 }
 

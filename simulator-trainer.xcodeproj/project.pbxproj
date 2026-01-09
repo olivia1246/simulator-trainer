@@ -101,6 +101,14 @@
 			);
 			target = 5F0DDBC62DD9468700F6A709 /* SimRuntimeHelper */;
 		};
+		5FA062922F1129AA00108E25 /* Exceptions for "machoe" folder in "simulator-trainer" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				main.c,
+				tests/unit_tests.c,
+			);
+			target = 5FC346D42DC0A55100572D7F /* simulator-trainer */;
+		};
 		5FC347232DC1CB1200572D7F /* Exceptions for "simulator-trainer" folder in "simulator-trainer" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -157,6 +165,14 @@
 			path = hooks;
 			sourceTree = "<group>";
 		};
+		5FA0628A2F11299C00108E25 /* machoe */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				5FA062922F1129AA00108E25 /* Exceptions for "machoe" folder in "simulator-trainer" target */,
+			);
+			path = machoe;
+			sourceTree = "<group>";
+		};
 		5FC346D72DC0A55100572D7F /* simulator-trainer */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -203,6 +219,7 @@
 			children = (
 				5F4904CC2DFE4BE600D56F9D /* SwiftTerm.framework */,
 				5F49089F2E07E5BE00D56F9D /* libobjsee-static.a */,
+				5FA0628A2F11299C00108E25 /* machoe */,
 			);
 			path = external;
 			sourceTree = "<group>";
@@ -314,6 +331,7 @@
 				5F19A80B2DEF018600D52D33 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
+				5FA0628A2F11299C00108E25 /* machoe */,
 				5FC346D72DC0A55100572D7F /* simulator-trainer */,
 			);
 			name = "simulator-trainer";
