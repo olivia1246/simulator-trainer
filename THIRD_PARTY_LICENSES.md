@@ -14,3 +14,8 @@ Copyright (c) Jay Freeman (saurik)
 License: GNU General Public License v3.0  
 Source: https://git.saurik.com/cycript.git  
 License text: LICENSES/GPL-3.0.txt
+
+SMJobBlessUtil.py  
+Copyright (c) 2012 Apple Inc.  
+License: Apple Software License (see file header)  
+Source: Apple DTS sample code (SMJobBless)
