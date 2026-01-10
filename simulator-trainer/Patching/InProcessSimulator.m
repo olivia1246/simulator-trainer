@@ -99,7 +99,7 @@
     // Make a copy of the Simulator.app executable at $TMPDIR/Simulator.dylib
     NSString *simulatorExecutablePath = [[self _simulatorBundlePath] stringByAppendingPathComponent:@"Contents/MacOS/Simulator"];
     NSString *simulatorDylibTmpPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"Simulator.dylib"];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:simulatorDylibTmpPath]) {
+    if ([[NSFileManager defaultManager] fileExistsAtPath:simulatorDylibTmpPath]) {
         [[NSFileManager defaultManager] removeItemAtPath:simulatorDylibTmpPath error:nil];
     }
     [[NSFileManager defaultManager] copyItemAtPath:simulatorExecutablePath toPath:simulatorDylibTmpPath error:nil];
